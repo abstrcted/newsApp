@@ -1,0 +1,25 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+venv/
+env/
+__pycache__/
+
+# Testing
+coverage
+.nyc_output
+
+# Next.js
+.next/
+out/
+build/
+dist/
+
+# Misc
+.DS_Store
+*.log
+.env
+.env.local
+.gemini/
+tmp/
