@@ -1,0 +1,66 @@
+{
+    "jacobin": {
+        "bias": -1.0,
+        "name": "Jacobin"
+    },
+    "breitbart": {
+        "bias": 1.0,
+        "name": "Breitbart News"
+    },
+    "nypost": {
+        "bias": 0.5,
+        "name": "New York Post"
+    },
+    "cnn": {
+        "bias": -0.2,
+        "name": "CNN"
+    },
+    "foxnews": {
+        "bias": 0.8,
+        "name": "Fox News"
+    },
+    "npr": {
+        "bias": -0.1,
+        "name": "NPR"
+    },
+    "theguardian": {
+        "bias": -0.6,
+        "name": "The Guardian"
+    },
+    "bbc": {
+        "bias": -0.1,
+        "name": "BBC News"
+    },
+    "usatoday": {
+        "bias": 0.0,
+        "name": "USA Today"
+    },
+    "federalist": {
+        "bias": 0.8,
+        "name": "The Federalist"
+    },
+    "democracynow": {
+        "bias": -1.0,
+        "name": "Democracy Now!"
+    },
+    "theintercept": {
+        "bias": -1.0,
+        "name": "The Intercept"
+    },
+    "commondreams": {
+        "bias": -1.0,
+        "name": "Common Dreams"
+    },
+    "dailywire": {
+        "bias": 1.0,
+        "name": "The Daily Wire"
+    },
+    "newsmax": {
+        "bias": 1.0,
+        "name": "Newsmax"
+    },
+    "gatewaypundit": {
+        "bias": 1.0,
+        "name": "The Gateway Pundit"
+    }
+}
