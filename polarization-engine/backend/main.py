@@ -55,7 +55,11 @@ RSS_URLS = {
     "commondreams": "https://www.commondreams.org/rss",
     "dailywire": "https://www.dailywire.com/rss.xml",
     "newsmax": "https://www.newsmax.com/rss/Newsfront/16/",
-    "gatewaypundit": "https://www.thegatewaypundit.com/feed/"
+    "gatewaypundit": "https://www.thegatewaypundit.com/feed/",
+    "zerohedge": "http://feeds.feedburner.com/zerohedge/feed",
+    "blaze": "https://www.theblaze.com/feeds/feed.rss",
+    "wsws": "https://www.wsws.org/en/rss.xml",
+    "rawstory": "https://www.rawstory.com/feed/"
 }
 
 # Helper: Calculate "Rage Score"
@@ -293,7 +297,66 @@ async def scan_face(file: UploadFile = File(...)):
             os.remove(temp_filename)
         return {"error": str(e), "bias": 0.0, "message": "SCAN FAILED. FACE UNREADABLE."}
 
+from pydantic import BaseModel
+from openai import OpenAI
+
+# 1. Load API Key from root .env file
+API_KEY = None
+try:
+    # Path to the root .env file (two levels up from backend)
+    env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".env"))
+    if os.path.exists(env_path):
+        with open(env_path, "r") as f:
+            for line in f:
+                # Look for SECRET=...
+                if line.strip().startswith("SECRET"):
+                    parts = line.split("=", 1)
+                    if len(parts) > 1:
+                        API_KEY = parts[1].strip()
+                        print(f"Loaded API Key from .env: {API_KEY[:5]}...***")
+                        break
+    else:
+        print(f"Warning: .env file not found at {env_path}")
+except Exception as e:
+    print(f"Error loading API key: {e}")
+
+client = OpenAI(api_key=API_KEY) if API_KEY else None
+
+class ChatRequest(BaseModel):
+    message: str
+    persona: str # 'left', 'right', 'center'
+
+@app.post("/chat")
+async def chat_endpoint(request: ChatRequest):
+    if not client:
+        return {"reply": "Chatbot is offline. API Key missing."}
+
+    system_prompt = "You are a news anchor."
+    if request.persona == 'left':
+        system_prompt = "You are a satirical, stereotypical far-left activist. You use buzzwords like 'late-stage capitalism', 'praxis', 'problematic', and 'equity'. You are angry at the system."
+    elif request.persona == 'right':
+        system_prompt = "You are a satirical, stereotypical far-right conspiracy theorist. You mention 'the deep state', 'globalists', 'fake news', and 'patriotism'. You are suspicious of everything."
+    elif request.persona == 'center':
+        system_prompt = "You are a satirical, spineless centrist. You refuse to take a stance, always say 'both sides have points', and use phrases like 'let's meet in the middle' and 'nuance'."
+
+    try:
+        completion = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": request.message}
+            ]
+        )
+        return {"reply": completion.choices[0].message.content}
+    except Exception as e:
+        print(f"OpenAI API Error: {e}")
+        import traceback
+        traceback.print_exc()
+        return {"reply": f"I'm experiencing an existential crisis (Server Error): {str(e)}"}
+
 if __name__ == "__main__":
     import uvicorn
+    # Use different port if 8000 is blocked, or retry? 
+    # For now assume user killed 8000 or the script handles it.
     uvicorn.run(app, host="0.0.0.0", port=8000)
 

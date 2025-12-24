@@ -57,30 +57,23 @@ export default function SatireChat({ bias, fullPage = false }: SatireChatProps) 
         setInput('');
         setIsTyping(true);
 
-        // Hardcoded responses for now
-        setTimeout(() => {
-            let replyText = "I see.";
-            const lowerInput = input.toLowerCase();
+        // Real API Call
+        try {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // @ts-ignore
+            const axios = (await import('axios')).default;
+            const res = await axios.post('http://localhost:8000/chat', {
+                message: input,
+                persona: persona
+            });
 
-            if (persona === 'left') {
-                if (lowerInput.includes('hello') || lowerInput.includes('hi')) replyText = "Don't normalize casual greetings while the planet burns.";
-                else if (lowerInput.includes('news')) replyText = "Is it news, or is it corporate propaganda? Think about it.";
-                else if (lowerInput.includes('weather')) replyText = "The climate catastrophe is undeniable. Your umbrella won't save you.";
-                else replyText = "That sounds problematic. Have you unpacked why you feel that way?";
-            } else if (persona === 'right') {
-                if (lowerInput.includes('hello') || lowerInput.includes('hi')) replyText = "Stand back and stand by.";
-                else if (lowerInput.includes('news')) replyText = "The mainstream media lies. Only we know the truth.";
-                else if (lowerInput.includes('weather')) replyText = "It's sunny. Global warming is a hoax created to sell solar panels.";
-                else replyText = "Sounds like something a socialist would say. Are you a socialist?";
-            } else {
-                if (lowerInput.includes('hello')) replyText = "Hello. I have no strong feelings one way or the other.";
-                else if (lowerInput.includes('news')) replyText = "I see valid points on both sides of the paywall.";
-                else replyText = "I'm going to wait for more data before forming an opinion on that.";
-            }
-
-            setMessages(prev => [...prev, { id: Date.now().toString(), sender: 'bot', text: replyText }]);
+            setMessages(prev => [...prev, { id: Date.now().toString(), sender: 'bot', text: res.data.reply }]);
+        } catch (error) {
+            console.error(error);
+            setMessages(prev => [...prev, { id: Date.now().toString(), sender: 'bot', text: "Error connecting to the hive mind." }]);
+        } finally {
             setIsTyping(false);
-        }, 1500 + Math.random() * 1000);
+        }
     };
 
     return (

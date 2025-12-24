@@ -62,5 +62,21 @@
     "gatewaypundit": {
         "bias": 1.0,
         "name": "The Gateway Pundit"
+    },
+    "zerohedge": {
+        "bias": 1.0,
+        "name": "ZeroHedge"
+    },
+    "blaze": {
+        "bias": 0.9,
+        "name": "The Blaze"
+    },
+    "wsws": {
+        "bias": -1.0,
+        "name": "World Socialist Web Site"
+    },
+    "rawstory": {
+        "bias": -1,
+        "name": "Raw Story"
     }
 }

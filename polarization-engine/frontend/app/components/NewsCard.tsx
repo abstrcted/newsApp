@@ -70,8 +70,8 @@ export default function NewsCard({ article, index }: NewsCardProps) {
                     {article.title}
                 </h3>
 
-                <p className="text-sm text-gray-500 line-clamp-3 mb-4 flex-1 leading-relaxed">
-                    {article.summary}
+                <p className="text-sm text-gray-500 line-clamp-5 mb-4 flex-1 leading-relaxed">
+                    {article.summary.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()}
                 </p>
 
                 <div className="flex items-center gap-2 pt-4 border-t border-gray-50 mt-auto">
