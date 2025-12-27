@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+feedparser
+vaderSentiment
+deepface
+openai
+pydantic
+python-multipart
+torch
+transformers
+opencv-python
+numpy
+requests

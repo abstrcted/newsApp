@@ -18,31 +18,46 @@
 ---
 
 ## Slide 3: System Architecture
-**The "Radicalization Pipeline"**
+**The "PolarizationEncoder" Pipeline**
 
-1.  **Input**: User's Webcam Feed.
-2.  **Analysis**: Backend uses **DeepFace** (Computer Vision) to detect stats: *Age, Emotion, Race*.
-3.  **The Stereotyping Engine**: Logic that maps demographics to political stereotypes (e.g., "Angry Boomer" → Far Right, "Happy Gen Z" → Far Left).
-4.  **Content Aggregation**: Fetches real-time RSS feeds from across the spectrum (Jacobin, Breitbart, CNN, etc.).
-5.  **Ranking**: Sorts news by a calculated **"Rage Score"**.
+1.  **Data Inputs**:
+    *   **Visual**: User's webcam feed (analyzed for age, emotion, etc.).
+    *   **Text**: Live news articles from various sources.
+2.  **The Polarization Engine (Neural Network)**:
+    *   **Core Model**: A custom PyTorch model we call the `PolarizationEncoder`.
+    *   **How it works**: It takes the text of an article and combines it with the user's "profile" (derived from their face).
+3.  **Data Fusion**:
+    *   Uses a "Fusion Layer" to weight the article's content against the user's demographics.
+    *   *Goal*: Find articles that specifically trigger *this* specific user.
+4.  **Outputs**:
+    *   **Rage Score**: A predicted score of how likely the user is to engage (angrily).
+    *   **Bias Check**: Ensures the content aligns with the user's assigned echo chamber.
 
 ---
 
 ## Slide 4: Key Technical Features
-*   **Facial Profiling**: Utilizes `DeepFace` to determine user demographics and apparent emotional state in real-time.
-*   **Sentiment Analysis**: Uses **VADER** (Valence Aware Dictionary and sEntiment Reasoner) to score article headlines.
-    *   *Formula*: `Rage = (Negative Sentiment * 0.6) + (Compound Intensity * 0.4)`
-*   **Satire Chat**: An OpenAI-powered chatbot that adopts a persona (e.g., "Conspiracy Theorist", "Socialist Activist") matching the user's assigned bias.
+*   **Smart Text Analysis (BERT)**: 
+    *   We use a pre-trained **BERT** model (standard NLP model) to understand the *meaning* of news headlines, not just keywords.
+    *   We "fine-tune" it to recognize detailed political language.
+*   **The "Rage Score" Format**: 
+    *   A custom metric designed to maximize engagement.
+    *   *Formula*: `Rage = (Likelihood to Click * 0.7) + (Predicted Controversy * 0.3)`
+*   **Facial Profiling**: 
+    *   Uses `DeepFace` to turn a webcam image into a simple data point (e.g., "Young, Happy, Neutral") that the model can understand.
+*   **Satire Chat**: 
+    *   An OpenAI chatbot that acts as a radicalized companion, reinforcing the user's bias.
 
 ---
 
 ## Slide 5: Tech Stack
 *   **Frontend**: 
-    *   **Next.js (React)**: For a responsive, interactive UI.
-    *   **TailwindCSS**: For rapid, modern styling.
-*   **Backend**: 
-    *   **FastAPI (Python)**: High-performance API handling.
-    *   **Libraries**: `deepface` (Vision), `vaderSentiment` (NLP), `feedparser` (RSS), `openai`.
+    *   **Next.js (React)**: High-performance rendering.
+    *   **TailwindCSS**: Utility-first styling.
+*   **Backend & ML**: 
+    *   **FastAPI**: Asynchronous inference server.
+    *   **PyTorch**: Framework for the `PolarizationEncoder` model.
+    *   **Transformers (HuggingFace)**: Model hub for BERT weights.
+    *   **DeepFace**: For facial analysis pipeline.
 
 ---
 
